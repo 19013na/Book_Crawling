@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-
+from Person_book_rec import fetch_celebrity_books
 # 초기 세션 상태
 if 'page' not in st.session_state:
     st.session_state.page = 'intro'
@@ -43,6 +43,9 @@ if st.session_state.page == 'intro':
 # ---------------------------
 # 2️⃣ 사용자 정보 입력 단계별 UI
 # ---------------------------
+# ---------------------------
+# 2️⃣ 사용자 정보 입력 단계별 UI
+# ---------------------------
 elif st.session_state.page == 'input':
     st.title("👤 간단한 정보를 입력해주세요")
 
@@ -67,8 +70,21 @@ elif st.session_state.page == 'input':
             st.session_state.step = 4
             st.rerun()
 
-    # 버튼
+    # 책 형태 선택
     if st.session_state.step >= 4:
+        book_types = st.multiselect(
+            "e북과 오디오북을 추천해드릴까요?",
+            ["e북", "오디오북"],
+            key="book_types"
+        )
+
+        # 바로 다음 단계로 넘어가게
+        if st.session_state.step == 4:
+            st.session_state.step = 5
+            st.rerun()
+
+    
+    if st.session_state.step >= 5:
         st.markdown("---")
         st.success("모든 정보 입력이 완료되었습니다!")
         if st.button("📚 도서 추천 받기"):
@@ -84,9 +100,11 @@ elif st.session_state.page == 'recommend':
 당신이 입력한 정보를 기반으로  
 다음과 같은 도서를 추천드립니다. 📖
 """)
+    df = fetch_celebrity_books()
 
     # 🧭 사이드바에서 장르 재선택
     st.sidebar.header("🎯 추천 조건 변경")
+    num_items = st.sidebar.slider("추천 작가 수", min_value=5, max_value=20, value=10)
     selected_genres = st.sidebar.multiselect(
         "선호 장르를 다시 선택해보세요",
         ["소설", "에세이", "경제", "역사", "인문"],
@@ -101,10 +119,23 @@ elif st.session_state.page == 'recommend':
     for genre in selected_genres:
         st.markdown(f"- **책 제목 예시** ({genre}) - 설명 <!-- 여기에 데이터 삽입 -->")
 
-    st.subheader("🧑‍🎤 셀럽 추천 도서")
-    for genre in selected_genres:
-        st.markdown(f"- **셀럽 추천 예시** ({genre}) - 추천 이유 <!-- 여기에 데이터 삽입 -->")
-
+    st.subheader("🧑‍🎤 유명인물 추천 도서")
+    if df.empty:
+         st.info("추천 작가 데이터를 불러올 수 없습니다.")
+    
+    else:
+        for _, row in df.head(num_items).iterrows():  # 유저가 선택한 수 만큼만 보여줌
+            with st.container():
+                col1, col2 = st.columns([1, 5])
+                with col1:
+                    st.markdown("🎤")
+                with col2:
+                    st.markdown(f"**{row['name']}**")
+                    st.markdown(f"📘 대표 도서: {row['books'] or '정보 없음'}")
+                    st.markdown(f"[🔍 작가 검색하기]({row['link']})")
+        st.markdown("---")
     st.subheader("🎧 오디오북 추천")
     for genre in selected_genres:
         st.markdown(f"- **오디오북 예시** ({genre}) - 스트리밍 링크 <!-- 여기에 데이터 삽입 -->")
+
+# streamlit run webapptest1.py
