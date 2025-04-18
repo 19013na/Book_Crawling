@@ -29,4 +29,11 @@ def show_intro():
         """)
 
     if st.button("시작하기"):
+<<<<<<< HEAD
         st.session_state.page = 'input'
+=======
+        st.session_state.page = 'input'
+        
+    if st.button("바로 추천받기"):
+        st.session_state.page = 'common'
+>>>>>>> 480b0acb69df08506c4d72a7adecaece75a06c01
