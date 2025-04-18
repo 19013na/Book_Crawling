@@ -2,7 +2,7 @@ import streamlit as st
 
 from intro_page import show_intro
 from input_page import show_input
-from recommend_page import show_recommend
+from suit_rec_page import show_recommend
 from person_book_rec import fetch_celebrity_books
 
 # 초기 세션 상태 초기화

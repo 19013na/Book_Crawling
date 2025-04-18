@@ -5,8 +5,8 @@ import streamlit as st
 # ---------------------------
 
 GENRES_BY_BOOK_TYPE = {
-    "종이책": ["경제 경영", "소설/시/희곡", "사회정치", "에세이", "여행", "역사", "예술", "인문", "자기계발", "자연과학", "IT모바일"],
-    "e북": ["경제 경영", "에세이 시", "인문", "사회 정치", "자기계발", "역사", "예술 대중문화", "자연과학", "IT모바일"],
+    "종이책": ["전체", "경제 경영", "소설/시/희곡", "사회 정치", "에세이", "여행", "역사", "예술", "인문", "자기계발", "자연과학", "IT모바일"],
+    "e북": ["전체", "경제 경영", "에세이 시", "인문", "사회 정치", "자기계발", "역사", "예술 대중문화", "자연과학", "IT모바일"],
     "오디오북": ["오디오북"]
 }
 
@@ -44,19 +44,21 @@ def show_input():
         selected_book_type = st.session_state.get("book_types", "종이책")
         available_genres = GENRES_BY_BOOK_TYPE.get(selected_book_type, [])
 
-        genre = st.multiselect(
-            f"{selected_book_type}에서 선호하는 장르를 선택해주세요",
-            options=available_genres,
-            key="genre"
-        )
+        if selected_book_type != "오디오북":   
+            genre = st.selectbox(
+                f"{selected_book_type}에서 선호하는 장르를 선택해주세요",
+                options=available_genres,
+                key="genre"
+            )
 
-        if genre and st.session_state.step == 4:
-            st.session_state.step = 5
-            st.rerun()
-
-
-
-    
+            if genre and st.session_state.step == 4:
+                st.session_state.step = 5
+                st.rerun()
+        else:
+            if st.session_state.step == 4:
+                st.session_state.step = 5
+                st.rerun()
+                
     if st.session_state.step >= 5:
         st.markdown("---")
         st.success("모든 정보 입력이 완료되었습니다!")
