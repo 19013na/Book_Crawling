@@ -1,6 +1,13 @@
 import streamlit as st
 import time
 from Person_book_rec import fetch_celebrity_books
+
+GENRES_BY_BOOK_TYPE = {
+    "종이책": ["경제 경영", "소설/시/희곡", "사회정치", "에세이", "여행", "역사", "예술", "인문", "자기계발", "자연과학", "IT모바일"],
+    "e북": ["경제 경영", "에세이 시", "인문", "사회 정치", "자기계발", "역사", "예술 대중문화", "자연과학", "IT모바일"],
+    "오디오북": ["오디오북"]
+}
+
 # 초기 세션 상태
 if 'page' not in st.session_state:
     st.session_state.page = 'intro'
@@ -43,6 +50,7 @@ if st.session_state.page == 'intro':
 # ---------------------------
 # 2️⃣ 사용자 정보 입력 단계별 UI
 # ---------------------------
+
 # ---------------------------
 # 2️⃣ 사용자 정보 입력 단계별 UI
 # ---------------------------
@@ -63,25 +71,34 @@ elif st.session_state.page == 'input':
             st.session_state.step = 3
             st.rerun()
 
-    # 선호 장르
+# 책 형태 선택
     if st.session_state.step >= 3:
-        genre = st.multiselect("선호 장르", ["소설", "에세이", "경제", "역사", "인문"], key="genre")
-        if genre and st.session_state.step == 3:
-            st.session_state.step = 4
-            st.rerun()
-
-    # 책 형태 선택
-    if st.session_state.step >= 4:
-        book_types = st.multiselect(
-            "e북과 오디오북을 추천해드릴까요?",
-            ["e북", "오디오북"],
+        book_types = st.selectbox(
+            "어떤 책 형태를 추천해드릴까요?",
+            ["선택하세요", "종이책", "e북", "오디오북"],
             key="book_types"
         )
 
-        # 바로 다음 단계로 넘어가게
-        if st.session_state.step == 4:
+        if book_types != "선택하세요" and st.session_state.step == 3:
+            st.session_state.step = 4
+            st.rerun()
+
+    # 선호 장르 선택 (책 형태에 따라 다르게)
+    if st.session_state.step >= 4:
+        selected_book_type = st.session_state.get("book_types", "종이책")
+        available_genres = GENRES_BY_BOOK_TYPE.get(selected_book_type, [])
+
+        genre = st.multiselect(
+            f"{selected_book_type}에서 선호하는 장르를 선택해주세요",
+            options=available_genres,
+            key="genre"
+        )
+
+        if genre and st.session_state.step == 4:
             st.session_state.step = 5
             st.rerun()
+
+
 
     
     if st.session_state.step >= 5:
@@ -101,16 +118,19 @@ elif st.session_state.page == 'recommend':
 다음과 같은 도서를 추천드립니다. 📖
 """)
     df = fetch_celebrity_books()
-
+    if "genre" in st.session_state:
+        st.write("✅ 장르 값:", st.session_state.genre)
+    else:
+        st.write("❌ 장르 값 없음")
     # 🧭 사이드바에서 장르 재선택
     st.sidebar.header("🎯 추천 조건 변경")
     num_items = st.sidebar.slider("추천 작가 수", min_value=5, max_value=20, value=10)
     selected_genres = st.sidebar.multiselect(
-        "선호 장르를 다시 선택해보세요",
-        ["소설", "에세이", "경제", "역사", "인문"],
-        default=st.session_state.genre,
-        key="sidebar_genre"
-    )
+    "선호 장르를 다시 선택해보세요",
+    GENRES_BY_BOOK_TYPE.get(st.session_state.get("book_types", "종이책"), []),
+    default=st.session_state.genre if "genre" in st.session_state else [],
+    key="sidebar_genre"
+)
 
     st.sidebar.info("선호 장르를 변경하면 결과가 즉시 반영됩니다.")
 
@@ -132,7 +152,7 @@ elif st.session_state.page == 'recommend':
                 with col2:
                     st.markdown(f"**{row['name']}**")
                     st.markdown(f"📘 대표 도서: {row['books'] or '정보 없음'}")
-                    st.markdown(f"[🔍 작가 검색하기]({row['link']})")
+                    
         st.markdown("---")
     st.subheader("🎧 오디오북 추천")
     for genre in selected_genres:
