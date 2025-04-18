@@ -38,6 +38,7 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
         for item in writers:
             info = item.get("writerInfo", {})
             name = info.get("chrcName", "").strip()
+            image = info.get("imageUrl", "").strip() 
             link = f"https://www.kyobobook.co.kr/search/authorSearch.laf?author={name}"
 
             # 대표 도서 추출
@@ -48,9 +49,11 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
             author_list.append({
                 "name": name,
                 "link": link,
+                "image": image,
                 "books": books
             })
 
         time.sleep(1)
 
     return pd.DataFrame(author_list)
+
