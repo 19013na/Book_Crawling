@@ -12,6 +12,8 @@ def get_bestsellers(category_number=None, sex=None, age=None, max_items=10):
     category_number = category_number or "001"
     url = f'https://www.yes24.com/Product/Category/DayBestSeller?categoryNumber={category_number}'
     
+    # 오디오북 설정 필요 - 장르 설정 X
+
     # 성별 및 나이 조건 추가
     if sex: url += f"&sex={sex}"
     if age: url += f"&age={age}"
