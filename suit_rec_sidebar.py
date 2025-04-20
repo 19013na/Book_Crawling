@@ -11,7 +11,7 @@ def show_sidebar():
     st.sidebar.header("🎯 추천 조건 변경")
 
     # 추천 개수 슬라이더 (선택값 저장 X)
-    num_items_best = st.sidebar.slider("📚 작품 개수", min_value=1, max_value=20, value=10)
+    num_items_best = st.sidebar.slider("📚 작품 개수", min_value=1, max_value=24, value=10)
 
     # 책 형태
     book_type = st.sidebar.selectbox(

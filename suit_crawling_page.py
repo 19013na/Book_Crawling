@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # ---------------------------
-# 3️⃣ 추천 결과 페이지 크롤링 수행행!
+# 3️⃣ 추천 결과 페이지 크롤링 수행!
 # ---------------------------
 
 headers = {
@@ -36,6 +36,7 @@ def get_bestsellers(category_number=None, sex=None, age=None, max_items=20):
             author = item.select_one("a[href*='author=']").text
             publisher = item.select_one("a[href*='company=']").text
             date = item.select_one(".authPub.info_date").text
+            img = item.select_one("img.lazy").get("data-original")
 
             if not all([rank, title_tag, author, publisher, date]):
                 continue
@@ -49,7 +50,8 @@ def get_bestsellers(category_number=None, sex=None, age=None, max_items=20):
                 "저자": author,
                 "출판사": publisher,
                 "출간일": date,
-                "링크": link
+                "링크": link,
+                "이미지": img
             })
         except Exception:
             continue
