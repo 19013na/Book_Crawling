@@ -15,19 +15,19 @@ def show_input():
 
     # 성별
     if st.session_state.step >= 1:
-        gender = st.selectbox("성별", ["선택하세요", "남성", "여성"], key="gender")
+        gender = st.selectbox("성별", ["선택하세요", "모든 성별", "여성", "남성"], key="gender")
         if gender != "선택하세요" and st.session_state.step == 1:
             st.session_state.step = 2
             st.rerun()
 
     # 연령대
     if st.session_state.step >= 2:
-        age_group = st.selectbox("연령대", ["선택하세요", "10대", "20대", "30대", "40대", "50대 이상"], key="age_group")
+        age_group = st.selectbox("연령대", ["선택하세요", "모든 연령", "10대", "20대", "30대", "40대", "50대 이상"], key="age_group")
         if age_group != "선택하세요" and st.session_state.step == 2:
             st.session_state.step = 3
             st.rerun()
 
-# 책 형태 선택
+    # 책 형태 선택
     if st.session_state.step >= 3:
         book_types = st.selectbox(
             "어떤 책 형태를 추천해드릴까요?",
