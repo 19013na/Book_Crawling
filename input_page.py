@@ -41,7 +41,7 @@ def show_input():
 
     # 선호 장르 선택 (책 형태에 따라 다르게)
     if st.session_state.step >= 4:
-        selected_book_type = st.session_state.get("book_types", "종이책")
+        selected_book_type = st.session_state.get("book_types", None)
         available_genres = GENRES_BY_BOOK_TYPE.get(selected_book_type, [])
 
         if selected_book_type != "오디오북":   
@@ -64,6 +64,7 @@ def show_input():
         st.success("모든 정보 입력이 완료되었습니다!")
         if st.button("📚 도서 추천 받기"):
             go_to_recommend_page()
+            st.rerun()
 
 
 # 페이지 전환 함수
