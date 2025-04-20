@@ -26,9 +26,11 @@ def show_sidebar():
 
     # 책 형태 변하면, 장르 -> 전체로 변경하기 (초기화하기)
     # why? 책 형태에 따라서 장르 카테고리가 다름. 초기화 안해주면 오류 발생 가능
-    if prev_book_type != book_type:
+    if prev_book_type is not None and prev_book_type != book_type:
         st.session_state["genre"] = "전체"
-        st.session_state["prev_book_type"] = book_type
+        
+    # 항상 현재 book_type을 기억해두기
+    st.session_state["prev_book_type"] = book_type
 
     # 성별
     gender = st.sidebar.selectbox(
