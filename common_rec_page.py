@@ -11,6 +11,7 @@ def show_common_rec():
     df_cel = fetch_celebrity_books()
     df_com = fetch_kyobo_bestseller()
     st.dataframe(df_cel)
+
     # 사이드바 슬라이더
     st.sidebar.header("🎯 추천 조건 변경")
     num_items_best = st.sidebar.slider("베스트셀러 개수", min_value=5, max_value=20, value=10)

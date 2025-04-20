@@ -1,5 +1,5 @@
 
-# 종이책
+# 종이책 장르
 PAPERBOOK_CATEGORY_MAP = {
     "전체": "001",
     "경제 경영": "001001025",
@@ -17,7 +17,7 @@ PAPERBOOK_CATEGORY_MAP = {
 }
 
 
-# EBOOK
+# EBOOK 장르
 EBOOK_CATEGORY_MAP = {
     "전체": "017",
     "경제 경영": "017001047",

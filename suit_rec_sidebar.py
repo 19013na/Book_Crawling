@@ -8,6 +8,8 @@ from suit_category_map import PAPERBOOK_CATEGORY_MAP, EBOOK_CATEGORY_MAP, GENDER
 # 🎯 사이드바: 장르 재선택
 # ---------------------------
 def show_sidebar_genre_selector(book_type, default_genre=None):
+    
+    
     st.sidebar.header("🎯 장르 선택")
 
     if book_type == "오디오북":
