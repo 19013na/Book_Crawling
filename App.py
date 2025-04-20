@@ -3,7 +3,7 @@ import streamlit as st
 from intro_page import show_intro
 from input_page import show_input
 from common_rec_page import show_common_rec
-from Person_book_rec import fetch_celebrity_books
+from person_book_rec import fetch_celebrity_books
 
 # 초기 세션 상태 초기화
 if 'page' not in st.session_state:
