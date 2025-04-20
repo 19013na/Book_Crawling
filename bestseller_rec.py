@@ -43,6 +43,9 @@ def fetch_kyobo_bestseller(top_n: int = 10) -> pd.DataFrame:
             review_count = item.select_one("span.font-normal.text-gray-700")
             count = review_count.get_text(strip=True) if review_count else ""
 
+                    # 🔥 진짜 책 이미지 URL 추출
+            img_tag = item.select_one("div.relative.flex-shrink-0 img[src*='pdt/']")
+            image_url = img_tag['src'] if img_tag else ""
             books.append({
                 "title": title,
                 "author": author,
@@ -51,10 +54,11 @@ def fetch_kyobo_bestseller(top_n: int = 10) -> pd.DataFrame:
                 "price": price,
                 "description": desc,
                 "review_score": score,
-                "review_count": count
+                "review_count": count,
+                 "이미지": image_url
             })
 
         except Exception:
             continue
-
+        pd.set_option('display.max_colwidth', None)
     return pd.DataFrame(books)

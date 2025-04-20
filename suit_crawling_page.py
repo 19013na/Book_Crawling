@@ -10,10 +10,10 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
 }
 
-def get_bestsellers(category_number=None, sex=None, age=None, max_items=10):
+def get_bestsellers(category_number=None, sex=None, age=None, max_items=20):
     
-    # 카테고리가 없으면 종합 베스트셀러 가져오기 - 전체: 001
-    category_number = category_number or "001"
+    # 카테고리가 없으면 종합 베스트셀러 가져오기
+    category_number = category_number
     url = f'https://www.yes24.com/Product/Category/DayBestSeller?categoryNumber={category_number}'
     
     # 오디오북 설정 필요 - 장르 설정 X
