@@ -1,14 +1,11 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
 from matplotlib import font_manager
 
-# 3. 도서 구입량
-# 2019, 2021, 2023년도 문화체육관광부 국민독서 실태조사
-# 도서_구입량_result.csv파일 참고
-
-def plot_book_purchase_trend():
-    df = pd.read_csv('data/도서_구입량_result.csv', index_col='구분')
+def run_purchase_trend_analysis(filepath='data/도서_구입량_result.csv'):
+    df = pd.read_csv(filepath, index_col='구분')
     df_melted = df.reset_index().melt(id_vars='구분', var_name='연도_형태', value_name='구입량')
 
     df_melted['연도'] = df_melted['연도_형태'].str.extract(r'(\d{4})')
@@ -23,24 +20,30 @@ def plot_book_purchase_trend():
     font_prop = font_manager.FontProperties(fname=font_path)
     font_size = font_manager.FontProperties(fname=font_path, size=20)
 
-    sns.set(style='whitegrid')
-    plt.figure(figsize=(10, 6))
-    sns.lineplot(data=data, x='연도', y='구입량', hue='형태', marker='o', linewidth=2.5)
+    st.subheader("📈 도서 형태별 연도별 구입량 추세")
+    with st.expander("📊 구입량 추이 자세히 보기", expanded=False):
+        st.markdown("""
+        전자책, 종이책, 오디오북 형태의 구입량 변화 추이를 살펴보세요.\n
+        특히 최근 몇 년간 **전자책이나 오디오북 사용은 늘고 있지만,**  
+        **종이책 독서율**은 계속 **줄어드는 경향**을 보이고 있어요.
+        """)
+        st.markdown("&nbsp;", unsafe_allow_html=True)
 
-    for i in range(len(data)):
-        row = data.iloc[i]
-        plt.text(row['연도'], row['구입량'] + 0.1, str(row['구입량']),
-                 ha='center', fontsize=9, fontproperties=font_prop)
+        sns.set(style='whitegrid')
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.lineplot(data=data, x='연도', y='구입량', hue='형태', marker='o', linewidth=2.5, ax=ax)
 
-    plt.title('도서 형태별 연도별 구입량 변화 (구입자 기준)', fontproperties=font_size)
-    plt.xlabel('연도', fontproperties=font_prop)
-    plt.ylabel('구입량', fontproperties=font_prop)
-    plt.xticks([2019, 2021, 2023])
-    plt.legend(title='도서 형태', prop=font_prop, title_fontproperties=font_prop)
-    plt.ylim(3, 10) 
-    plt.grid(True, linestyle='--', alpha=0.2)
-    plt.tight_layout()
-    
-    fig = plt.gcf()  # 현재 figure 객체 저장
-    return fig
-    #return plt
+        for i in range(len(data)):
+            row = data.iloc[i]
+            ax.text(row['연도'], row['구입량'] + 0.1, str(row['구입량']),
+                    ha='center', fontsize=9, fontproperties=font_prop)
+
+        ax.set_title('도서 형태별 연도별 구입량 변화', fontproperties=font_size)
+        ax.set_xlabel('연도', fontproperties=font_prop)
+        ax.set_ylabel('구입량', fontproperties=font_prop)
+        ax.set_xticks([2019, 2021, 2023])
+        ax.legend(title='도서 형태', prop=font_prop, title_fontproperties=font_prop)
+        ax.set_ylim(3, 10)
+        ax.grid(True, linestyle='--', alpha=0.2)
+
+        st.pyplot(fig)
