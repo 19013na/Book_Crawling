@@ -40,6 +40,10 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
             name = info.get("chrcName", "").strip()
             image = info.get("imageUrl", "").strip() 
             link = f"https://www.kyobobook.co.kr/search/authorSearch.laf?author={name}"
+            description = info.get("chrcIntcCntt", "").strip()
+            current_rank = info.get("prstRnkn")  # ✅ 현재 순위
+            previous_rank = info.get("frmrRnkn")  # ✅ 이전 순위
+
 
             # 대표 도서 추출
             book_list = item.get("representativeBook", [])
@@ -50,7 +54,8 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
                 "name": name,
                 "link": link,
                 "image": image,
-                "books": books
+                "books": books,
+                "description": description
             })
 
         time.sleep(1)
