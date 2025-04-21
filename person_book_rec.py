@@ -16,8 +16,7 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
     }
     session.headers.update(headers)
 
-    # 쿠키 세팅
-    session.get("https://store.kyobobook.co.kr/")
+    session.get("https://store.kyobobook.co.kr/")  # 쿠키 세팅
 
     author_list = []
 
@@ -39,13 +38,9 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
             info = item.get("writerInfo", {})
             name = info.get("chrcName", "").strip()
             image = info.get("imageUrl", "").strip() 
+            description = info.get("chrcIntcCntt", "").strip()  # ✅ 인물 설명 추가
             link = f"https://www.kyobobook.co.kr/search/authorSearch.laf?author={name}"
-            description = info.get("chrcIntcCntt", "").strip()
-            current_rank = info.get("prstRnkn")  # ✅ 현재 순위
-            previous_rank = info.get("frmrRnkn")  # ✅ 이전 순위
 
-
-            # 대표 도서 추출
             book_list = item.get("representativeBook", [])
             book_titles = [book.get("cmdtName", "").strip() for book in book_list if book.get("cmdtName")]
             books = ", ".join(book_titles)
@@ -55,10 +50,9 @@ def fetch_celebrity_books(pages: int = 2) -> pd.DataFrame:
                 "link": link,
                 "image": image,
                 "books": books,
-                "description": description
+                "description": description  # ✅ 여기서 저장
             })
 
         time.sleep(1)
 
     return pd.DataFrame(author_list)
-
