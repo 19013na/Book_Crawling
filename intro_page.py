@@ -6,6 +6,7 @@ import matplotlib.font_manager as fm
 import matplotlib as mpl
 import warnings
 from data_chart_3 import plot_book_purchase_trend
+from data_chart_1 import load_reading_rate_data, generate_reading_rate_plot
 
 # ---------------------------
 # 1️⃣ 인트로 페이지
@@ -57,46 +58,18 @@ def show_intro():
 
 
     # 기본 독서율
-    # 📄 데이터 불러오기 및 시각화
-    df = pd.read_csv("data\독서율_비교_2019vs2021vs2023.csv")
+    # 데이터 로딩 및 시각화
+    df_total = load_reading_rate_data()
+    fig1 = generate_reading_rate_plot(df_total, font_prop)
+    # 화면에 출력
+    st.pyplot(fig1)
 
-    # 전처리
-    df_melted = df.melt(id_vars='구분(독서율 %)', var_name='년도', value_name='독서율(%)')
-    df_total = df_melted[df_melted['구분(독서율 %)'] == '전체'].copy()
-
-    # 📊 시각화
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.set_style("whitegrid")
-
-    sns.barplot(
-        data=df_total,
-        x='년도',
-        y='독서율(%)',
-        color='skyblue',
-        ax=ax
-    )
-
-    # 수치 표시
-    for index, row in df_total.iterrows():
-        ax.text(row['년도'], row['독서율(%)'] + 1,
-                f"{row['독서율(%)']:.1f}%",
-                ha='center',
-                fontsize=12, fontproperties=font_prop, color='#333333')
-
-    ax.set_title('전체 독서율 변화', fontsize=17, weight='bold', fontproperties=font_prop)
-    ax.set_ylabel('독서율 (%)', fontsize=13, fontproperties=font_prop)
-    ax.set_xlabel('', fontsize=13)
-    ax.set_ylim(35, 55)
-    ax.grid(True, axis='y', linestyle='--', alpha=0.3)
-    ax.set_xticklabels(df_total['년도'].unique(), fontproperties=font_prop)
-
-    st.pyplot(fig)
 
     # ✅ 도서 구입량 추세 그래프 (expander로 감싸기)
     with st.expander("📈 도서 형태별 연도별 구입량 추세 보기"):
         st.markdown("전자책, 종이책, 오디오북 형태의 구입량 변화 추이를 살펴보세요.")
-        fig2 = plot_book_purchase_trend()
-        st.pyplot(fig2)
+        fig3 = plot_book_purchase_trend()
+        st.pyplot(fig3)
 
 
     if st.button("시작하기"):
