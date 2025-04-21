@@ -9,7 +9,7 @@ from suit_rec_sidebar import show_sidebar
 # ---------------------------
 
 def show_recommend():
-    st.title("✨ 추천 도서 리스트")
+    st.title("추천 도서 리스트")
     st.markdown("당신이 입력한 정보를 기반으로 다음과 같은 도서를 추천드립니다.")
     st.markdown("&nbsp;", unsafe_allow_html=True)
     
@@ -51,21 +51,35 @@ def show_recommend():
         st.info("추천 도서를 불러올 수 없습니다 😥")
     else:
         for _, row in df.head(num_items_best).iterrows():
-            # 책 표지 이미지 추가 (여기서는 URL 가정)
             book_image_url = row['이미지']
-            
-            # 도서 정보 카드형식으로 표시함
+
+            # 카드형식 + hover효과
             st.markdown(f"""
-            <div style="background-color: #fff; border-radius: 10px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <style>
+                .hover-card {{
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }}
+                .hover-card:hover {{
+                    transform: scale(1.03);
+                    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+                }}
+            </style>
+
+            <div class="hover-card" style="background-color: #fff; border-radius: 10px; padding: 20px; margin-bottom: 30px; 
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
                 <div style="display: flex; align-items: center;">
-                    <img src="{book_image_url}" alt="Book Image" width="120" height="180" style="border-radius: 10px; margin-right: 20px;">
+                    <img src="{book_image_url}" alt="Book Image" width="120" height="180" 
+                        style="border-radius: 10px; margin-right: 20px;">
                     <div>
                         <h4 style="color: #2a4d74; font-size: 18px;">{row['순위']}. {row['제목']}</h4>
                         <p style="font-size: 15px; color: #5a5a5a;">🖋️ 저자 : {row['저자']}</p>
                         <p style="font-size: 15px; color: #5a5a5a;">🧾 출판사 : {row['출판사']}</p>
                         <p style="font-size: 15px; color: #5a5a5a;">📅 출간일 : {row['출간일']}</p>
-                        <p style="font-size: 16px; color: #0073e6;"><a href="{row['링크']}" style="text-decoration: none; color: #0073e6;">📖 상세보기</a></p>
+                        <p style="font-size: 16px; color: #0073e6;">
+                            <a href="{row['링크']}" style="text-decoration: none; color: #0073e6;">📖 상세보기</a>
+                        </p>
                     </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
