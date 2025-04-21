@@ -3,6 +3,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 
+# 3. 도서 구입량
+# 2019, 2021, 2023년도 문화체육관광부 국민독서 실태조사
+# 도서_구입량_result.csv파일 참고
+
 def plot_book_purchase_trend():
     df = pd.read_csv('data/도서_구입량_result.csv', index_col='구분')
     df_melted = df.reset_index().melt(id_vars='구분', var_name='연도_형태', value_name='구입량')
@@ -36,5 +40,7 @@ def plot_book_purchase_trend():
     plt.ylim(3, 10) 
     plt.grid(True, linestyle='--', alpha=0.2)
     plt.tight_layout()
-
-    return plt
+    
+    fig = plt.gcf()  # 현재 figure 객체 저장
+    return fig
+    #return plt

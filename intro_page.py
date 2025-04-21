@@ -5,6 +5,8 @@ import seaborn as sns
 import matplotlib.font_manager as fm
 import matplotlib as mpl
 import warnings
+from data_chart_3 import plot_book_purchase_trend
+
 # ---------------------------
 # 1️⃣ 인트로 페이지
 # ---------------------------
@@ -54,7 +56,7 @@ def show_intro():
 
 
 
-
+    # 기본 독서율
     # 📄 데이터 불러오기 및 시각화
     df = pd.read_csv("data\독서율_비교_2019vs2021vs2023.csv")
 
@@ -90,6 +92,11 @@ def show_intro():
 
     st.pyplot(fig)
 
+    # ✅ 도서 구입량 추세 그래프 (expander로 감싸기)
+    with st.expander("📈 도서 형태별 연도별 구입량 추세 보기"):
+        st.markdown("전자책, 종이책, 오디오북 형태의 구입량 변화 추이를 살펴보세요.")
+        fig2 = plot_book_purchase_trend()
+        st.pyplot(fig2)
 
 
     if st.button("시작하기"):
