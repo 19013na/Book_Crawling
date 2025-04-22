@@ -6,6 +6,14 @@ from common_rec_page import show_common_rec
 from person_book_rec import fetch_celebrity_books
 from suit_rec_page import show_recommend
 
+# 탭 제목
+st.set_page_config(
+    page_title="책, 오늘",
+    page_icon="📚",                   
+    layout="centered",          
+    initial_sidebar_state="auto"
+)
+
 # 초기 세션 상태 초기화
 if 'page' not in st.session_state:
     st.session_state.page = 'intro'
